@@ -34,3 +34,13 @@ export const loginUser = async (req, res, next) => {
         next(error);
     }
 }
+
+export const logoutUser = async (req, res, next) => {
+    console.log('loging out user');
+    try {
+        res.clearCookie('access_token');
+        res.status(200).json("user logged out successfully");
+    } catch(error){
+        next(error);
+    }
+}
