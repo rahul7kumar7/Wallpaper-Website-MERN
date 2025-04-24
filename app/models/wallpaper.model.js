@@ -9,6 +9,19 @@ const wallpaperSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    width:{
+        type: Number,
+    },
+    height:{
+        type: Number,
+    },
+    format:{
+        type:String,
+        required:true
+    },
+    assetId:{
+        type: String,
+    },
     altTitle:{
         type: String,
     },

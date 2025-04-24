@@ -3,6 +3,8 @@ import {useNavigate} from "react-router-dom";
 import { FaStar } from "react-icons/fa";
 import { HiCurrencyRupee } from "react-icons/hi";
 import { GiDiceTarget } from "react-icons/gi";
+import { IoCloseCircle } from "react-icons/io5";
+
 
 
 export default function Signup(){
@@ -10,6 +12,11 @@ export default function Signup(){
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const [noData, setNoData] = useState({
+        username: false,
+        email: false,
+        password: false,
+    });
 
     const handleChange = (event) => {
         setFormData({
@@ -21,20 +28,33 @@ export default function Signup(){
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            if (!formData.username || !formData.email || !formData.password) {
-                setError(`ERROR: Enter some data to proceed`);
-                return;
+            if (!formData.username) {
+                setNoData({
+                    username: true,
+                })
             }
+            if (!formData.email) {
+                setNoData({
+                    email: true,
+                })
+            }
+                if (!formData.password) {
+                    setNoData({
+                        password: true,
+                    })
+                }
+
             console.log(formData);
             setLoading(true);
-            const res = await fetch('/app/auth/register', {
-                method: 'POST',
-                headers: {
-                    "content-type": "application/json",
-                },
-                body: JSON.stringify(formData)
-            });
-            const data = await res.json();
+            // const res = await fetch('/app/auth/register', {
+            //     method: 'POST',
+            //     headers: {
+            //         "content-type": "application/json",
+            //     },
+            //     body: JSON.stringify(formData)
+            // });
+            // const data = await res.json();
+            const data = 'something'
             console.log(data);
             if(data.success === false){
                 setError(data.message);
@@ -46,7 +66,9 @@ export default function Signup(){
             setFormData(null)
             console.log(data);
             navigate("/signin");
-        } catch(error){
+        console.log(noData)
+        }
+        catch(error){
             console.log(error);
             setError(error.message);
             setLoading(false)
@@ -60,14 +82,24 @@ export default function Signup(){
 
     return (
         <div className="p-3 ">
-        <h3 className="text-5xl mx-auto max-w-2xl font-bold uppercase">Discover Images and Artists</h3>
+            {/*{noData && (*/}
+            {/*    <div className="bg-amber-800 p-3 my-1 flex justify-between items-center">*/}
+            {/*        <p>Please enter email</p>*/}
+            {/*        <a href="#"><IoCloseCircle/></a>*/}
+            {/*    </div>*/}
+            {/*)}*/}
+
+
+
+
+            <h3 className="text-5xl mx-auto max-w-2xl font-bold uppercase">Discover Images and Artists</h3>
             <br/>
             <br/>
             <div className="flex md:flex-row flex-col gap-5 justify-center items-center">
                 <div className="flex flex-col flex-wrap">
                     <img className="object-contain"
-                        src="https://res.cloudinary.com/dg01gwwoc/image/upload/h_350/v1737992851/Cute-Anime-Girl-PNG-Free-Download_q9jlxx.png"
-                        alt=""/>
+                         src="https://res.cloudinary.com/dg01gwwoc/image/upload/h_350/v1737992851/Cute-Anime-Girl-PNG-Free-Download_q9jlxx.png"
+                         alt=""/>
                     <ul className="flex flex-col text-2xl gap-4">
                         <li className="flex gap-1 items-center">
                             <FaStar/> Favorite and track artists, characters, and more.
@@ -82,7 +114,8 @@ export default function Signup(){
                 </div>
                 <div className="flex flex-col gap-3">
                     <h2 className="shadow-2xs text-3xl">Register</h2>
-                    <button onClick={navigateSingin} className="cursor-pointer border-1 max-w-38 text-xs font-semibold p-2 bg-[#242527]">
+                    <button onClick={navigateSingin}
+                            className="cursor-pointer border-1 max-w-38 text-xs font-semibold p-2 bg-[#242527]">
                         Need to Login Instead?
                     </button>
                     <form onSubmit={handleSubmit} className="border-1 p-5 bg-[#242527] rounded-sm">

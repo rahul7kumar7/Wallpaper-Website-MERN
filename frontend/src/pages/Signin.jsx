@@ -1,12 +1,18 @@
 import {useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
+import OAuth from '../pages/Components/OAuth.jsx'
+import {useDispatch, useSelector} from "react-redux";
+import {loginStart, loginSuccess, loginFailure} from "../redux/user/userSlice.js";
 
 export default function Signin(){
 
     const [formData, setFormData] = useState({});
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+    // const [loading, setLoading] = useState(false);
+    // const [error, setError] = useState(null);
+    const {loading, error} = useSelector((state)=> state.user)
+
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleChange = (event) => {
         setFormData({
@@ -18,7 +24,7 @@ export default function Signin(){
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            setLoading(true);
+            dispatch(loginStart());
             const res = await fetch('/app/auth/login', {
                 method: 'POST',
                 headers: {
@@ -29,20 +35,18 @@ export default function Signin(){
             const data = await res.json();
             console.log(data);
             if(data.success === false){
-                setError(data.message);
-                setLoading(false);
+                dispatch(loginFailure(data.message));
                 console.log(data.message);
                 return;
             }
-            setLoading(false);
-            setFormData(null)
+            dispatch(loginSuccess(data));
             console.log(data);
             navigate('/');
 
         } catch(error){
             console.log(error);
-            setError(error.message);
-            setLoading(false)
+            dispatch(loginFailure(error.message));
+
         }
 
     }
@@ -64,8 +68,7 @@ export default function Signin(){
                     </div>
                     <button
                         className="bg-cyan-600 p-3 rounded-sm uppercase text-white font-semibold cursor-pointer">{loading ? 'loading....' : 'Login to your Account'}</button>
-                    <button
-                        className="bg-[#f03f35] p-3 rounded-sm uppercase text-white font-semibold cursor-pointer">{loading ? 'loading....' : 'Login through Google'}</button>
+                    <OAuth />
                     {error && <span className="text-red-400">{error}</span>}
                 </form>
 

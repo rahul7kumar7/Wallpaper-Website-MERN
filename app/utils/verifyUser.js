@@ -12,6 +12,7 @@ export const verifyUser = async (req, res, next) => {
         req.user = { id: decodedToken.id, username: user.username }; // Attach username to req.user
         next();
     } catch (err) {
+        console.log('You need to be logged in to upload wallpaper.')
         return next(403, 'Forbidden');
     }
 };
